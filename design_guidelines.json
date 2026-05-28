@@ -1,0 +1,96 @@
+{
+  "project_context": {
+    "domain": "University Optimization Tool (School Schedule Generator)",
+    "theme": "Light",
+    "archetype": "Archetype 4 (Swiss & High-Contrast) + Colorful Data Blocks",
+    "language": "es",
+    "description": "A dashboard combining academic rigor with a modern, colorful aesthetic. Focuses on clear data visualization, genetic algorithm controls, and a vibrant, color-coded weekly schedule grid."
+  },
+  "typography": {
+    "primary_heading": "Outfit",
+    "secondary_body": "Work Sans",
+    "rules": [
+      "Use 'font-outfit' for all headings with 'tracking-tight'.",
+      "Use 'font-worksans' for body text and data labels.",
+      "Metrics and numbers (fitness, generations) must use tabular-nums utility.",
+      "Do NOT use Inter or Roboto."
+    ]
+  },
+  "color_palette": {
+    "background": "#F8FAFC",
+    "surface": "#FFFFFF",
+    "border": "#E2E8F0",
+    "primary": "#4F46E5",
+    "primary_hover": "#4338CA",
+    "text": {
+      "main": "#0F172A",
+      "muted": "#64748B"
+    },
+    "metrics": {
+      "success": "#22C55E",
+      "warning": "#EAB308",
+      "error": "#EF4444",
+      "chart_fill": "#818CF8",
+      "chart_stroke": "#4F46E5"
+    },
+    "calendar_blocks": [
+      {"bg": "#FEF08A", "text": "#854D0E", "border": "#FDE047"},
+      {"bg": "#A7F3D0", "text": "#065F46", "border": "#6EE7B7"},
+      {"bg": "#BFDBFE", "text": "#1E3A8A", "border": "#93C5FD"},
+      {"bg": "#DDD6FE", "text": "#5B21B6", "border": "#C4B5FD"},
+      {"bg": "#FECACA", "text": "#991B1B", "border": "#FCA5A5"},
+      {"bg": "#FED7AA", "text": "#9A3412", "border": "#FDBA74"},
+      {"bg": "#FBCFE8", "text": "#9D174D", "border": "#F9A8D4"}
+    ]
+  },
+  "spacing_and_layout": {
+    "strategy": "The 'Control Room' Grid",
+    "base_grid": "grid-cols-1 lg:grid-cols-12",
+    "gap": "gap-6",
+    "padding_scale": "p-6 for cards to provide breathing room.",
+    "border_radius": "rounded-xl for cards, rounded-md for inner elements like inputs and calendar blocks."
+  },
+  "components": {
+    "cards": "Flat white surfaces (bg-white), sharp 1px border (border-slate-200), no default shadow. Add soft shadow (shadow-md) only on hover for interactive cards.",
+    "buttons": "Primary CTA 'Generar Horarios' must use bg-indigo-600 text-white font-semibold. Secondary buttons use outline variant.",
+    "calendar_grid": "CSS Grid layout. Leftmost column for time slots (e.g., 7:00 AM - 3:00 PM). Top row for days (Lunes - Viernes). Schedule blocks use random colors from the 'calendar_blocks' palette based on the subject (Materia).",
+    "charts": "Use Recharts AreaChart for 'Evolución del Fitness'. Fill with gradient using 'chart_fill' to transparent.",
+    "forms_and_inputs": "Shadcn UI forms. Use 'Tabs' to switch between 'Carga por CSV' and 'Formulario Manual'. Use Shadcn 'Slider' for algorithm parameters (Población, Generaciones, Mutación)."
+  },
+  "icons_and_assets": {
+    "library": "@phosphor-icons/react",
+    "instructions": "Use Phosphor Icons for dashboard elements (e.g., ChartLineUp, CalendarBlank, SlidersHorizontal, UploadSimple, Users, BookOpen)."
+  },
+  "media_urls": {
+    "empty_schedule_state": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/e2b6f467-1abc-42cb-a03c-36c5c7b588a1/images/205f7144674266e711a2d864aa5b3fec5656fb06eec63b1affaedc0d6589b582.png",
+      "description": "Abstract 3D illustration of floating colorful calendar blocks. Use this in the main schedule area before the user clicks 'Generar Horarios'. Display with max-w-md and opacity-90."
+    }
+  },
+  "testing_attributes": {
+    "rule": "CRITICAL: All interactive and key informational elements MUST include a 'data-testid' attribute in kebab-case format (e.g., data-testid='generate-schedule-btn', data-testid='fitness-chart')."
+  },
+  "page_structure": {
+    "Dashboard": {
+      "Header": "Logo/Title 'Generador de Horarios Evolutivo' on left. Export button on right.",
+      "Sidebar_Left_Col_Span_3": [
+        "Section 1: Data Entry. Tabs for 'Cargar Archivos' (CSV Dropzone) and 'Manual' (Buttons opening Dialogs to add Profesores, Grupos, Materias).",
+        "Section 2: Configuración (Horario laboral, Días).",
+        "Section 3: Parámetros del Algoritmo. Sliders for Tamaño de Población (10-200), Generaciones (10-500), Probabilidad de Mutación (0.01-1.0).",
+        "Action: Huge 'Generar Horarios' Button at the bottom."
+      ],
+      "Main_Content_Col_Span_9": [
+        "Top Bar: Dropdowns 'Filtrar por Grupo' and 'Filtrar por Profesor'.",
+        "Center: Weekly Calendar Grid. Shows the empty_schedule_state image initially. Once generated, displays the color-coded schedule.",
+        "Bottom Row (Split 2 cols): Left -> Convergence Chart (Fitness vs Generaciones). Right -> Métricas Panel (Reglas rotas: Choques de profesor, Choques de grupo, Horas sin asignar)."
+      ]
+    }
+  },
+  "instructions_to_main_agent": [
+    "Install @phosphor-icons/react and recharts.",
+    "Implement the UI exclusively in Spanish.",
+    "Preload sample data for 3 Profesores, 3 Grupos, and 5 Materias so the dashboard is functional immediately.",
+    "The calendar visualization must dynamically place blocks using grid-row-start based on time and grid-column-start based on the day. Add minimum gap-1 between calendar blocks.",
+    "For the 'Colorida' requirement, ensure every distinct 'Materia' gets a different pastel background color with its matching high-contrast text and border from the 'calendar_blocks' palette."
+  ]
+}
