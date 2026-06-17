@@ -14,7 +14,7 @@ export default function ConvergenceChart({ history }) {
   const data = history.map((v, i) => ({ gen: i + 1, fitness: v }));
 
   return (
-    <Card className="p-6 rounded-xl border border-slate-200 shadow-none" data-testid="convergence-chart">
+    <Card className="min-w-0 p-6 rounded-xl border border-slate-200 shadow-none" data-testid="convergence-chart">
       <div className="flex items-center gap-2 mb-4">
         <ChartLineUp weight="duotone" size={20} className="text-indigo-600" />
         <h2 className="font-outfit font-semibold text-slate-900">Evolución del Fitness</h2>
@@ -24,8 +24,8 @@ export default function ConvergenceChart({ history }) {
           Aún no hay datos. Genera un horario para ver la convergencia.
         </div>
       ) : (
-        <div className="h-[220px]">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[220px] w-full min-w-0" style={{ minHeight: 220 }}>
+          <ResponsiveContainer width="100%" height={220} minWidth={0} minHeight={220}>
             <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="fillFitness" x1="0" y1="0" x2="0" y2="1">

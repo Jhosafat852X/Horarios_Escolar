@@ -4,6 +4,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/index.css";
 import App from "@/App";
 
+document.documentElement.lang = "es";
+document.documentElement.translate = false;
+document.documentElement.classList.add("notranslate");
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

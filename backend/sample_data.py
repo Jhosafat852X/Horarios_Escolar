@@ -7,10 +7,15 @@ SAMPLE_PROFESORES = [
     {"id": "prof-4", "nombre": "Dr. Roberto Méndez"},
 ]
 
+SAMPLE_CARRERAS = [
+    {"id": "car-1", "nombre": "Ingeniería en Sistemas"},
+    {"id": "car-2", "nombre": "Ciencias Sociales"},
+]
+
 SAMPLE_GRUPOS = [
-    {"id": "grp-A", "nombre": "1° A"},
-    {"id": "grp-B", "nombre": "1° B"},
-    {"id": "grp-C", "nombre": "2° A"},
+    {"id": "grp-108A", "nombre": "108A", "carrera_id": "car-1", "semestre": 1, "seccion": "A", "codigo": "108A"},
+    {"id": "grp-108B", "nombre": "108B", "carrera_id": "car-1", "semestre": 1, "seccion": "B", "codigo": "108B"},
+    {"id": "grp-208A", "nombre": "208A", "carrera_id": "car-2", "semestre": 2, "seccion": "A", "codigo": "208A"},
 ]
 
 SAMPLE_MATERIAS = [

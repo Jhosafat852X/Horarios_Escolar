@@ -21,6 +21,7 @@ import {
   seedSample,
   clearAll,
   generateSchedule,
+  getLastSchedule,
   uploadCSV,
   updateConfig,
   createProfesor,
@@ -62,9 +63,10 @@ export default function Dashboard() {
     config: { dias: DEFAULT_DIAS, hora_inicio: 7, hora_fin: 14 },
   });
 
-  const [popSize, setPopSize] = useState(60);
+  const [popSize, setPopSize] = useState(500);
   const [generations, setGenerations] = useState(150);
   const [mutationRate, setMutationRate] = useState(0.05);
+  const [crossoverRate, setCrossoverRate] = useState(0.5);
   const [horaInicio, setHoraInicio] = useState(7);
   const [horaFin, setHoraFin] = useState(14);
 
@@ -94,6 +96,14 @@ export default function Dashboard() {
         setHoraInicio(d.config.hora_inicio);
         setHoraFin(d.config.hora_fin);
       }
+
+      // cargar último horario si existe
+      try {
+        const last = await getLastSchedule();
+        if (last && Object.keys(last).length) setSchedule(last);
+      } catch (e) {
+        // ignore
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -120,6 +130,7 @@ export default function Dashboard() {
         pop_size: popSize,
         generations,
         mutation_rate: mutationRate,
+        crossover_rate: crossoverRate,
         dias: data.config.dias,
         hora_inicio: horaInicio,
         hora_fin: horaFin,
@@ -161,7 +172,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]" data-testid="dashboard-root">
+    <div className="min-h-screen bg-[#F8FAFC] notranslate" translate="no" data-testid="dashboard-root">
       {/* Header */}
       <header className="border-b border-slate-200 bg-white">
         <div className="max-w-[1600px] mx-auto px-6 py-5 flex items-center justify-between">
@@ -243,13 +254,14 @@ export default function Dashboard() {
                       Sube tu archivo CSV/Excel
                     </p>
                     <p className="text-xs text-slate-500 mt-1">
-                      Columnas: profesor, grupo, materia, horas_semanales
+                      Columnas: profesor, grupo, materia, horas_semanales, carrera, semestre
+                      (PDF solo con tablas estructuradas)
                     </p>
                     <input
                       id="csv-input"
                       data-testid="csv-input"
                       type="file"
-                      accept=".csv,.xlsx,.xls"
+                      accept=".csv,.xlsx,.xls,.pdf"
                       className="hidden"
                       onChange={(e) => {
                         const f = e.target.files?.[0];
@@ -351,9 +363,9 @@ export default function Dashboard() {
                   <Slider
                     data-testid="slider-pop-size"
                     value={[popSize]}
-                    min={10}
-                    max={200}
-                    step={5}
+                    min={500}
+                    max={5000}
+                    step={500}
                     onValueChange={(v) => setPopSize(v[0])}
                   />
                 </div>
@@ -387,6 +399,22 @@ export default function Dashboard() {
                     max={100}
                     step={1}
                     onValueChange={(v) => setMutationRate(v[0] / 100)}
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <Label className="text-xs text-slate-600">Probabilidad de Cruce</Label>
+                    <span className="text-xs font-semibold text-indigo-600 tabular-nums">
+                      {crossoverRate.toFixed(2)}
+                    </span>
+                  </div>
+                  <Slider
+                    data-testid="slider-crossover"
+                    value={[crossoverRate * 100]}
+                    min={0}
+                    max={100}
+                    step={1}
+                    onValueChange={(v) => setCrossoverRate(v[0] / 100)}
                   />
                 </div>
               </div>
@@ -438,7 +466,7 @@ export default function Dashboard() {
                     <SelectItem value="todos">Todos los grupos</SelectItem>
                     {data.grupos.map((g) => (
                       <SelectItem key={g.id} value={g.id}>
-                        {g.nombre}
+                        {g.codigo || g.nombre}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -497,6 +525,8 @@ export default function Dashboard() {
                         <th className="py-2 font-medium">Materia</th>
                         <th className="py-2 font-medium">Profesor</th>
                         <th className="py-2 font-medium">Grupo</th>
+                        <th className="py-2 font-medium">Carrera</th>
+                        <th className="py-2 font-medium">Semestre</th>
                         <th className="py-2 font-medium text-right">Horas/sem</th>
                       </tr>
                     </thead>
@@ -508,7 +538,13 @@ export default function Dashboard() {
                           <tr key={m.id} className="border-b border-slate-100" data-testid={`materia-row-${m.id}`}>
                             <td className="py-2 font-medium text-slate-800">{m.nombre}</td>
                             <td className="py-2 text-slate-600">{prof?.nombre || "—"}</td>
-                            <td className="py-2 text-slate-600">{grp?.nombre || "—"}</td>
+                            <td className="py-2 text-slate-600">{grp?.codigo || grp?.nombre || "—"}</td>
+                            <td className="py-2 text-slate-600">
+                              {data.carreras?.find((c) => c.id === m.carrera_id)?.nombre || "—"}
+                            </td>
+                            <td className="py-2 text-slate-600">
+                              {grp?.semestre != null ? grp.semestre : "—"}
+                            </td>
                             <td className="py-2 text-right tabular-nums">{m.horas_semanales}</td>
                           </tr>
                         );

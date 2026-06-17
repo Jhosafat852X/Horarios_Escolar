@@ -14,8 +14,8 @@ export const createProfesor = (nombre) =>
 export const deleteProfesor = (id) =>
   api.delete(`/profesores/${id}`).then((r) => r.data);
 
-export const createGrupo = (nombre) =>
-  api.post("/grupos", { nombre }).then((r) => r.data);
+export const createGrupo = (grupo) =>
+  api.post("/grupos", grupo).then((r) => r.data);
 export const deleteGrupo = (id) =>
   api.delete(`/grupos/${id}`).then((r) => r.data);
 
@@ -37,3 +37,8 @@ export const uploadCSV = (file) => {
 
 export const generateSchedule = (params) =>
   api.post("/generate", params).then((r) => r.data);
+
+export const parseScheduleText = (text) =>
+  api.post("/parse-schedule-text", { text }).then((r) => r.data);
+
+export const getLastSchedule = () => api.get("/last-schedule").then((r) => r.data);

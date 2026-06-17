@@ -228,6 +228,32 @@ class TestCSVUpload:
         assert r.status_code == 400
 
 
+class TestScheduleParsing:
+    def test_parse_schedule_text_basic(self, client):
+        text = (
+            "GRUPO: 608\n"
+            "HORA LUNES MARTES MIÉRCOLES JUEVES VIERNES\n"
+            "08:00 PROGRAMACIÓN VISUAL PROGRAMACIÓN VISUAL PROGRAMACIÓN VISUAL INGENIERÍA DE SOFTWARE II PROGRAMACIÓN VISUAL\n"
+            "09:00 INGENIERÍA DE SOFTWARE II PROGRAMACIÓN VISUAL INGENIERÍA DE SOFTWARE II PROGRAMACIÓN VISUAL INGENIERÍA DE SOFTWARE II\n"
+            "ASIGNATURA PROFESOR\n"
+            "PROGRAMACIÓN VISUAL M.I. CARLOS EDGARDO CRUZ PÉREZ\n"
+            "INGENIERÍA DE SOFTWARE II DR. COSIJOPII GARCÍA GARCÍA\n"
+            "SEMESTRE: SEXTO\n"
+        )
+        r = client.post(f"{API}/parse-schedule-text", json={"text": text}, timeout=30)
+        assert r.status_code == 200, r.text
+        body = r.json()
+        assert body["ok"] is True
+        sections = body["sections"]
+        assert isinstance(sections, list) and len(sections) == 1
+        section = sections[0]
+        assert section["group"] == "608"
+        assert section["semester"] == "SEXTO"
+        assert section["schedule"]
+        assert section["schedule"][0]["time"] == "08:00"
+        assert section["schedule"][1]["time"] == "09:00"
+
+
 # ---------- Generate ----------
 class TestGenerate:
     def test_generate_400_when_no_materias(self, client):

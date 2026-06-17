@@ -36,6 +36,9 @@ export default function ManualDataDialogs({
 
   const [profNombre, setProfNombre] = useState("");
   const [grpNombre, setGrpNombre] = useState("");
+  const [grpSemestre, setGrpSemestre] = useState(1);
+  const [grpSeccion, setGrpSeccion] = useState("A");
+  const [grpCodigo, setGrpCodigo] = useState("");
   const [matForm, setMatForm] = useState({
     nombre: "",
     profesor_id: "",
@@ -53,8 +56,16 @@ export default function ManualDataDialogs({
   };
   const handleAddGrp = async () => {
     if (!grpNombre.trim()) return;
-    await onCreateGrupo(grpNombre.trim());
+    await onCreateGrupo({
+      nombre: grpNombre.trim(),
+      semestre: parseInt(grpSemestre, 10) || 1,
+      seccion: grpSeccion.trim().toUpperCase() || "A",
+      codigo: grpCodigo.trim() || `${grpSemestre}${grpSeccion.trim().toUpperCase()}`,
+    });
     setGrpNombre("");
+    setGrpSemestre(1);
+    setGrpSeccion("A");
+    setGrpCodigo("");
     setGrpOpen(false);
     toast.success("Grupo agregado");
     await onChange();
@@ -136,14 +147,51 @@ export default function ManualDataDialogs({
               <DialogTitle>Agregar Grupo</DialogTitle>
             </DialogHeader>
             <div className="space-y-3">
-              <Label htmlFor="grp-nombre">Nombre del grupo</Label>
+              <Label htmlFor="grp-nombre">Nombre del grupo (letra o etiqueta)</Label>
               <Input
                 id="grp-nombre"
                 data-testid="input-grp-nombre"
                 value={grpNombre}
                 onChange={(e) => setGrpNombre(e.target.value)}
-                placeholder="Ej. 1° C"
+                placeholder="Ej. A"
               />
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <Label htmlFor="grp-semestre">Semestre</Label>
+                  <Input
+                    id="grp-semestre"
+                    data-testid="input-grp-semestre"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={grpSemestre}
+                    onChange={(e) => setGrpSemestre(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grp-seccion">Sección</Label>
+                  <Input
+                    id="grp-seccion"
+                    data-testid="input-grp-seccion"
+                    value={grpSeccion}
+                    onChange={(e) => setGrpSeccion(e.target.value)}
+                    placeholder="A"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grp-codigo">Código</Label>
+                  <Input
+                    id="grp-codigo"
+                    data-testid="input-grp-codigo"
+                    value={grpCodigo}
+                    onChange={(e) => setGrpCodigo(e.target.value)}
+                    placeholder="108A"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
             </div>
             <DialogFooter>
               <Button onClick={handleAddGrp} data-testid="btn-save-grupo" className="bg-indigo-600 hover:bg-indigo-700">
@@ -273,7 +321,7 @@ function ChipList({ items, onDelete, emptyText, testid }) {
           key={it.id}
           className="inline-flex items-center gap-1 text-[11px] bg-slate-100 text-slate-700 rounded-full pl-2 pr-1 py-0.5"
         >
-          {it.nombre}
+          {it.codigo || it.nombre}
           <button
             onClick={() => onDelete(it.id)}
             className="hover:bg-rose-200 hover:text-rose-700 rounded-full p-0.5 transition-colors"

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, Fragment } from "react";
 import { Card } from "@/components/ui/card";
 import { colorForKey } from "@/lib/colors";
 import { CalendarBlank } from "@phosphor-icons/react";
@@ -87,7 +87,7 @@ export default function ScheduleCalendar({
 
         {/* Rows */}
         {horas.map((h) => (
-          <>
+          <Fragment key={`hour-row-${h}`}>
             <div
               key={`hour-${h}`}
               className="text-xs text-slate-500 font-medium text-right pr-3 py-2 tabular-nums border-r border-slate-100 flex items-start justify-end"
@@ -134,7 +134,7 @@ export default function ScheduleCalendar({
                 </div>
               );
             })}
-          </>
+          </Fragment>
         ))}
       </div>
     </Card>
